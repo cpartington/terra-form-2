@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using UnityEngine;
 
 public class TerrainComputer
 {
-    private int TerrainLevels = Constants.TerrainLevels;
-    private int[] TerrainTypeWeights = Constants.TerrainTypeWeights;
-
     public static TerrainComputer Instance { 
         get
         {
@@ -25,6 +23,12 @@ public class TerrainComputer
     public int WaterLevel { get; private set; }
 
     public Dictionary<int, TerrainType> LevelToTerrainType { get; private set; }
+
+    private readonly int TerrainLevels = Constants.TerrainLevels;
+    private readonly int[] TerrainTypeWeights = Constants.TerrainTypeWeights;
+
+    private float xOffset;
+    private float zOffset;
 
     private TerrainComputer()
     {
@@ -58,6 +62,7 @@ public class TerrainComputer
             }
         }
 
+        // Calculate percentiles
         float terrainlevelWeightTotal = terrainLevelWeights.Sum();
         TerrainLevelPercentiles = terrainLevelWeights.Select((weight, index) =>
         { return (weight + terrainLevelWeights.Take(index).Sum()) / terrainlevelWeightTotal; }).ToArray();
@@ -66,6 +71,8 @@ public class TerrainComputer
         TerrainTypePercentiles = TerrainTypeWeights.Select((weight, index) =>
         { return (weight + TerrainTypeWeights.Take(index).Sum()) / terrainTypeWeightTotal; }).ToArray();
 
+        // Create mapping from y level to terrain type
+        // TODO this will need to be changed to handle the extra layer at the bottom
         this.LevelToTerrainType = new Dictionary<int, TerrainType>();
         TerrainType lastType = TerrainType.DeepWater;
         for (int level = 0; level < TerrainLevels; level++)
@@ -89,6 +96,20 @@ public class TerrainComputer
             }
         }
 
-        UnityEngine.Debug.Log(WaterLevel + ", " + LevelToTerrainType);
+        // Calculate noise value offsets
+        (xOffset, zOffset) = (UnityEngine.Random.Range(-10000f, 10000f), UnityEngine.Random.Range(-10000f, 10000f));
+    }
+
+    public int CalculateGroundHeight(int x, int z)
+    {
+        float noiseValue = Mathf.Abs(Mathf.Clamp(Mathf.PerlinNoise(x * Constants.GridNoiseScale + xOffset, z * Constants.GridNoiseScale + zOffset), 0, 1) * 2 - 1);
+        for (int i = 0; i < TerrainLevelPercentiles.Length; i++)
+        {
+            if (noiseValue <= TerrainLevelPercentiles[i])
+            {
+                return i + Constants.TerrainHeightOffset;
+            }
+        }
+        throw new Exception("noiseValue should be less than or equal to the max TerrainLevelPercentiles but is not.");
     }
 }

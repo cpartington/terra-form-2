@@ -9,6 +9,7 @@ public class TerrainCell
     public int z;
 
     public TerrainType type;
+    public TerrainCellType cellType;
 
     public TerrainCell(int x, int z, float noiseValue)
     {
@@ -26,5 +27,10 @@ public class TerrainCell
         }
 
         this.type = TerrainComputer.Instance.LevelToTerrainType.GetValueOrDefault(this.y);
+    }
+
+    public TerrainCell(TerrainCellType cellType)
+    {
+        this.cellType = cellType;
     }
 }
