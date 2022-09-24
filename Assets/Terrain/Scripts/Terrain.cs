@@ -15,7 +15,7 @@ public class Terrain : MonoBehaviour
     //private readonly Vector3 OriginPosition = new Vector3(-(Constants.GridXLength / 2), 0, -(Constants.GridZLength / 2));
     private int WaterLevel;
 
-    private TerrainCell[,,] TerrainGrid;
+    private byte[,,] TerrainGrid;
 
     private int vertexIndex = 0;
     private List<Vector3> vertices = new List<Vector3>();
@@ -39,7 +39,7 @@ public class Terrain : MonoBehaviour
 
     private void InitTerrainGrid()
     {
-        TerrainGrid = new TerrainCell[XLength, YLength, ZLength];
+        TerrainGrid = new byte[XLength, YLength, ZLength];
 
         // Iterate over all (x,z) coordinates
         for (int x = 0; x < XLength; x++)
@@ -54,15 +54,15 @@ public class Terrain : MonoBehaviour
                 {
                     if (y < groundHeight)
                     {
-                        TerrainGrid[x, y, z] = new TerrainCell(TerrainCellType.Ground);
+                        TerrainGrid[x, y, z] = TerrainComputer.Instance.LevelToTerrainType(y);
                     }
                     else if (y < WaterLevel)
                     {
-                        TerrainGrid[x, y, z] = new TerrainCell(TerrainCellType.Water);
+                        TerrainGrid[x, y, z] = TerrainType.Water;
                     }
                     else
                     {
-                        TerrainGrid[x, y, z] = new TerrainCell(TerrainCellType.Air);
+                        TerrainGrid[x, y, z] = TerrainType.Air;
                     }
                 }
             }
@@ -79,7 +79,7 @@ public class Terrain : MonoBehaviour
             {
                 for (int z = 0; z < ZLength; z++)
                 {
-                    if (TerrainGrid[x, y, z].cellType == TerrainCellType.Ground)
+                    if (TerrainType.IsGround(TerrainGrid[x, y, z]))
                     {
                         UpdateMeshData(new Vector3(x, y, z));
                     }
@@ -138,7 +138,7 @@ public class Terrain : MonoBehaviour
             return true;
         }
 
-        return TerrainGrid[x, y, z].cellType != TerrainCellType.Ground;
+        return !TerrainType.IsGround(TerrainGrid[x, y, z]);
     }
 
     private void CreateMesh()

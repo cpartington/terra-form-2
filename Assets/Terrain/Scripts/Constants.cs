@@ -6,17 +6,14 @@ using UnityEngine;
 /// </summary>
 public static class Constants
 {
-    public static int GridXLength = 450;
-    public static int GridZLength = 800;
+    public static int GridXLength = 150;
+    public static int GridZLength = 270;
     public static float GridCellHeight = 0.5f;
     public static float GridNoiseScale = 0.01f;
     public const int TerrainHeightOffset = 1;
-    //public const int AirHeightOffset = 10; // TODO should this be higher?
     public static int TerrainLevels = 50;
-    public static int GridYLength = TerrainLevels + TerrainHeightOffset; //+ AirHeightOffset;
+    public static int GridYLength = TerrainLevels + TerrainHeightOffset;
     public static int[] TerrainTypeWeights = { 1, 1, 3, 6, 5 };
-
-    public const TerrainType MaxWaterType = TerrainType.LowGround;
 
     public static readonly Vector3[] CubeVertices = new Vector3[8]
     {
@@ -59,18 +56,28 @@ public static class Constants
     };
 }
 
-public enum TerrainType
+public static class TerrainType
 {
-    DeepWater,
-    ShallowWater,
-    LowGround,
-    MidGround,
-    HighGround
-}
+    public const byte DarkSand = 0;
+    public const byte Sand = 1;
+    public const byte LowSoil = 2;
+    public const byte MidSoil = 3;
+    public const byte HighSoil = 4;
+    public const byte Water = 5;
+    public const byte Air = 6;
 
-public enum TerrainCellType
-{
-    Ground,
-    Water,
-    Air
+    public static bool IsGround(byte terrain)
+    {
+        switch (terrain)
+        {
+            case DarkSand:
+            case Sand:
+            case LowSoil:
+            case MidSoil:
+            case HighSoil:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

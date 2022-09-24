@@ -22,7 +22,7 @@ public class TerrainComputer
     public float[] TerrainLevelPercentiles { get; private set; }
     public int WaterLevel { get; private set; }
 
-    public Dictionary<int, TerrainType> LevelToTerrainType { get; private set; }
+    private Dictionary<int, byte> LevelToTerrainTypeDict;
 
     private readonly int TerrainLevels = Constants.TerrainLevels;
     private readonly int[] TerrainTypeWeights = Constants.TerrainTypeWeights;
@@ -72,24 +72,24 @@ public class TerrainComputer
         { return (weight + TerrainTypeWeights.Take(index).Sum()) / terrainTypeWeightTotal; }).ToArray();
 
         // Create mapping from y level to terrain type
-        // TODO this will need to be changed to handle the extra layer at the bottom
-        this.LevelToTerrainType = new Dictionary<int, TerrainType>();
-        TerrainType lastType = TerrainType.DeepWater;
-        for (int level = 0; level < TerrainLevels; level++)
+        LevelToTerrainTypeDict = new Dictionary<int, byte>();
+        // Bottom layer is always dark sand
+        LevelToTerrainTypeDict.Add(0, TerrainType.DarkSand);
+        byte lastType = TerrainType.DarkSand;
+        for (int level = 1; level <= TerrainLevels; level++)
         {
             float percentile = level / ((float)TerrainLevels - 1);
-            for (int type = 0; type < TerrainTypePercentiles.Length; type++)
+            for (byte type = 0; type < TerrainTypePercentiles.Length; type++)
             {
                 if (percentile <= TerrainTypePercentiles[type])
                 {
-                    TerrainType terrainType = (TerrainType)type;
-                    this.LevelToTerrainType.Add(level, terrainType);
+                    LevelToTerrainTypeDict.Add(level, type);
                     
-                    if (lastType == TerrainType.ShallowWater && terrainType == TerrainType.LowGround)
+                    if (lastType == TerrainType.Sand && type == TerrainType.LowSoil)
                     {
                         WaterLevel = level;
                     }
-                    lastType = terrainType;
+                    lastType = type;
                     
                     break;
                 }
@@ -111,5 +111,12 @@ public class TerrainComputer
             }
         }
         throw new Exception("noiseValue should be less than or equal to the max TerrainLevelPercentiles but is not.");
+    }
+
+    public byte LevelToTerrainType(int y)
+    {
+        byte terrainType;
+        LevelToTerrainTypeDict.TryGetValue(y, out terrainType);
+        return terrainType;
     }
 }
