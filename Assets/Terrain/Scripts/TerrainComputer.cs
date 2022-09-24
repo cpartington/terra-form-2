@@ -85,7 +85,7 @@ public class TerrainComputer
                 {
                     LevelToTerrainTypeDict.Add(level, type);
                     
-                    if (lastType == TerrainType.Sand && type == TerrainType.LowSoil)
+                    if (lastType == TerrainType.Sand && type == TerrainType.LowGrass)
                     {
                         WaterLevel = level;
                     }

@@ -6,8 +6,9 @@ using UnityEngine;
 /// </summary>
 public static class Constants
 {
-    public static int GridXLength = 150;
+    // 16x9 proportions: 270x150, 800x450
     public static int GridZLength = 270;
+    public static int GridXLength = 150;
     public static float GridCellHeight = 0.5f;
     public static float GridNoiseScale = 0.01f;
     public const int TerrainHeightOffset = 1;
@@ -54,30 +55,4 @@ public static class Constants
         new Vector2(1, 0),
         new Vector2(1, 1),
     };
-}
-
-public static class TerrainType
-{
-    public const byte DarkSand = 0;
-    public const byte Sand = 1;
-    public const byte LowSoil = 2;
-    public const byte MidSoil = 3;
-    public const byte HighSoil = 4;
-    public const byte Water = 5;
-    public const byte Air = 6;
-
-    public static bool IsGround(byte terrain)
-    {
-        switch (terrain)
-        {
-            case DarkSand:
-            case Sand:
-            case LowSoil:
-            case MidSoil:
-            case HighSoil:
-                return true;
-            default:
-                return false;
-        }
-    }
 }

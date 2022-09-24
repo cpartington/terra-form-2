@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shallow Water
+  m_Name: Sand Dark
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -119,8 +119,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.9150943, g: 0.8275947, b: 0.4704966, a: 1}
-    - _Color: {r: 0.9150943, g: 0.8275947, b: 0.47049654, a: 1}
+    - _BaseColor: {r: 0.754717, g: 0.6380932, b: 0.28123888, a: 1}
+    - _Color: {r: 0.75471693, g: 0.6380932, b: 0.28123882, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
