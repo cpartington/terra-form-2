@@ -6,14 +6,14 @@ using UnityEngine;
 /// </summary>
 public static class Constants
 {
-    public static int GridXLength = 75;
-    public static int GridZLength = 75;
+    public static int GridXLength = 450;
+    public static int GridZLength = 800;
     public static float GridCellHeight = 0.5f;
     public static float GridNoiseScale = 0.01f;
     public const int TerrainHeightOffset = 1;
-    public const int AirHeightOffset = 10; // TODO should this be higher?
-    public static int TerrainLevels = 25;
-    public static int GridYLength = TerrainLevels + TerrainHeightOffset + AirHeightOffset;
+    //public const int AirHeightOffset = 10; // TODO should this be higher?
+    public static int TerrainLevels = 50;
+    public static int GridYLength = TerrainLevels + TerrainHeightOffset; //+ AirHeightOffset;
     public static int[] TerrainTypeWeights = { 1, 1, 3, 6, 5 };
 
     public const TerrainType MaxWaterType = TerrainType.LowGround;
