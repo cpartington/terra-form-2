@@ -41,11 +41,11 @@ public class MeshData
     {
         Mesh mesh = new()
         {
-            indexFormat = UnityEngine.Rendering.IndexFormat.UInt32,
-            vertices = vertices.ToArray(),
-            triangles = triangles.ToArray(),
-            uv = uvs.ToArray()
+            indexFormat = UnityEngine.Rendering.IndexFormat.UInt32
         };
+        mesh.SetVertices(vertices);
+        mesh.SetIndices(triangles, MeshTopology.Triangles, 0);
+        mesh.SetUVs(0, uvs);
 
         mesh.RecalculateNormals();
         return mesh;
