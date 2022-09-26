@@ -8,6 +8,7 @@ public class Terrain : MonoBehaviour
 
     public MeshRenderer meshRenderer;
     public MeshFilter meshFilter;
+    public MeshData TerrainMeshData;
 
     private readonly int XLength = Constants.GridXLength;
     private readonly int ZLength = Constants.GridZLength;
@@ -17,17 +18,13 @@ public class Terrain : MonoBehaviour
 
     private byte[,,] TerrainGrid;
 
-    private int vertexIndex = 0;
-    private List<Vector3> vertices = new List<Vector3>();
-    private List<Vector2> uvs = new List<Vector2>();
-    private List<int> triangles = new List<int>();
-
     private void Awake()
     {
         Instance = this;
+        TerrainMeshData = new();
         WaterLevel = TerrainComputer.Instance.WaterLevel + Constants.TerrainHeightOffset;
 
-        Stopwatch stopwatch = new Stopwatch();
+        Stopwatch stopwatch = new();
         stopwatch.Start();
 
         InitTerrainGrid();
@@ -71,7 +68,7 @@ public class Terrain : MonoBehaviour
 
     private void UpdateTerrainMesh()
     {
-        ClearMeshData();
+        TerrainMeshData.Clear();
 
         for (int y = 0; y < YLength; y++)
         {
@@ -81,24 +78,17 @@ public class Terrain : MonoBehaviour
                 {
                     if (TerrainType.IsGround(TerrainGrid[x, y, z]))
                     {
-                        UpdateMeshData(new Vector3(x, y, z));
+                        AddCellToMesh(new Vector3(x, y, z));
                     }
                 }
             }
         }
 
-        CreateMesh();
+        Mesh mesh = TerrainMeshData.CreateMesh();
+        meshFilter.mesh = mesh;
     }
 
-    private void ClearMeshData()
-    {
-        vertexIndex = 0;
-        vertices.Clear();
-        triangles.Clear();
-        uvs.Clear();
-    }
-
-    private void UpdateMeshData(Vector3 pos)
+    private void AddCellToMesh(Vector3 pos)
     {
         // Iterate over the six faces of the cell
         for (int f = 0; f < 6; f++)
@@ -106,23 +96,7 @@ public class Terrain : MonoBehaviour
             // If the face is an edge face, add its data to the mesh
             if (IsEdgeFace(pos + Constants.FaceCheckDirections[f]))
             {
-                vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[f, 0]]);
-                vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[f, 1]]);
-                vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[f, 2]]);
-                vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[f, 3]]);
-
-                uvs.Add(Constants.CubeUvs[0]);
-                uvs.Add(Constants.CubeUvs[1]);
-                uvs.Add(Constants.CubeUvs[2]);
-                uvs.Add(Constants.CubeUvs[3]);
-
-                triangles.Add(vertexIndex);
-                triangles.Add(vertexIndex + 1);
-                triangles.Add(vertexIndex + 2);
-                triangles.Add(vertexIndex + 2);
-                triangles.Add(vertexIndex + 1);
-                triangles.Add(vertexIndex + 3);
-                vertexIndex += 4;
+                TerrainMeshData.Add(pos, f);
             }
         }
     }
@@ -139,19 +113,6 @@ public class Terrain : MonoBehaviour
         }
 
         return !TerrainType.IsGround(TerrainGrid[x, y, z]);
-    }
-
-    private void CreateMesh()
-    {
-        Mesh mesh = new Mesh();
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.uv = uvs.ToArray();
-
-        mesh.RecalculateNormals();
-
-        meshFilter.mesh = mesh;
     }
 
     //public Vector3 GetWorldPosition(int x, int y, int z)
