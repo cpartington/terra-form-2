@@ -78,7 +78,7 @@ public class Terrain : MonoBehaviour
                 {
                     if (TerrainType.IsGround(TerrainGrid[x, y, z]))
                     {
-                        AddCellToMesh(new Vector3(x, y, z));
+                        AddCellToMesh(new Vector3(x, y, z), TerrainGrid[x, y, z]);
                     }
                 }
             }
@@ -88,7 +88,7 @@ public class Terrain : MonoBehaviour
         meshFilter.mesh = mesh;
     }
 
-    private void AddCellToMesh(Vector3 pos)
+    private void AddCellToMesh(Vector3 pos, byte terrainType)
     {
         // Iterate over the six faces of the cell
         for (int f = 0; f < 6; f++)
@@ -96,7 +96,7 @@ public class Terrain : MonoBehaviour
             // If the face is an edge face, add its data to the mesh
             if (IsEdgeFace(pos + Constants.FaceCheckDirections[f]))
             {
-                TerrainMeshData.Add(pos, f);
+                TerrainMeshData.Add(pos, f, terrainType);
             }
         }
     }
