@@ -15,7 +15,7 @@ public class MeshData
         { TerrainType.LowGrass, new() },
         { TerrainType.MidGrass, new() },
         { TerrainType.HighGrass, new() },
-        //{ TerrainType.Water, new() },
+        { TerrainType.Water, new() },
     };
 
     public void Clear()
@@ -55,10 +55,10 @@ public class MeshData
         Mesh mesh = new()
         {
             indexFormat = UnityEngine.Rendering.IndexFormat.UInt32,
-            subMeshCount = 5
+            subMeshCount = TerrainTypeTopology.Count
         };
         mesh.SetVertices(vertices);
-        for (byte terrainType = 0; terrainType < 5; terrainType++)
+        for (byte terrainType = 0; terrainType < TerrainTypeTopology.Count; terrainType++)
         {
             TerrainTypeTopology.TryGetValue(terrainType, out List<int> triangles);
             mesh.SetIndices(triangles, MeshTopology.Triangles, terrainType); 

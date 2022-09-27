@@ -76,7 +76,7 @@ public class Terrain : MonoBehaviour
             {
                 for (int z = 0; z < ZLength; z++)
                 {
-                    if (TerrainType.IsGround(TerrainGrid[x, y, z]))
+                    if (TerrainGrid[x, y, z] != TerrainType.Air)
                     {
                         AddCellToMesh(new Vector3(x, y, z), TerrainGrid[x, y, z]);
                     }
@@ -94,14 +94,20 @@ public class Terrain : MonoBehaviour
         for (int f = 0; f < 6; f++)
         {
             // If the face is an edge face, add its data to the mesh
-            if (IsEdgeFace(pos + Constants.FaceCheckDirections[f]))
+            if (IsEdgeFace(pos + Constants.FaceCheckDirections[f], terrainType))
             {
                 TerrainMeshData.Add(pos, f, terrainType);
             }
         }
     }
 
-    private bool IsEdgeFace(Vector3 pos)
+    /// <summary>
+    /// Determines if a face is an edge face (and therefore should be added to the mesh).
+    /// </summary>
+    /// <param name="pos">New position to check against</param>
+    /// <param name="terrainType">Terrain type of the original position</param>
+    /// <returns></returns>
+    private bool IsEdgeFace(Vector3 pos, byte terrainType)
     {
         int x = Mathf.FloorToInt(pos.x);
         int y = Mathf.FloorToInt(pos.y);
@@ -112,7 +118,16 @@ public class Terrain : MonoBehaviour
             return true;
         }
 
-        return !TerrainType.IsGround(TerrainGrid[x, y, z]);
+        if (TerrainType.IsGround(terrainType))
+        {
+            return !TerrainType.IsGround(TerrainGrid[x, y, z]);
+        }
+        else if (terrainType == TerrainType.Water)
+        {
+            return TerrainGrid[x, y, z] == TerrainType.Air;
+        }
+
+        return false;
     }
 
     //public Vector3 GetWorldPosition(int x, int y, int z)
