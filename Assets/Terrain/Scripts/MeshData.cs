@@ -5,7 +5,6 @@ public class MeshData
 {
     private int vertexIndex = 0;
     private List<Vector3> vertices = new();
-    private List<Vector2> uvs = new();
     private List<int> triangles = new();
 
     private Dictionary<byte, List<int>> TerrainTypeTopology = new()
@@ -23,7 +22,6 @@ public class MeshData
         vertexIndex = 0;
         vertices.Clear();
         triangles.Clear();
-        uvs.Clear();
     }
 
     public void Add(Vector3 pos, int face, byte terrainType)
@@ -32,11 +30,6 @@ public class MeshData
         vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, 1]]);
         vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, 2]]);
         vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, 3]]);
-
-        uvs.Add(Constants.CubeUvs[0]);
-        uvs.Add(Constants.CubeUvs[1]);
-        uvs.Add(Constants.CubeUvs[2]);
-        uvs.Add(Constants.CubeUvs[3]);
 
         List<int> triangles;
         TerrainTypeTopology.TryGetValue(terrainType, out triangles);
@@ -63,7 +56,6 @@ public class MeshData
             TerrainTypeTopology.TryGetValue(terrainType, out List<int> triangles);
             mesh.SetIndices(triangles, MeshTopology.Triangles, terrainType); 
         }
-        mesh.SetUVs(0, uvs);
 
         mesh.RecalculateNormals();
         return mesh;

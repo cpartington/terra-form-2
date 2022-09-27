@@ -29,12 +29,12 @@ public static class Constants
 
     public static readonly Vector3[] FaceCheckDirections = new Vector3[6]
     {
-        new Vector3(0, 0, -1),
-        new Vector3(0, 0, 1),
-        new Vector3(0, 1, 0),
-        new Vector3(0, -1, 0),
-        new Vector3(-1, 0, 0),
-        new Vector3(1, 0, 0),
+        new Vector3(0, 0, -1), // Back face
+        new Vector3(0, 0, 1),  // Front face
+        new Vector3(0, 1, 0),  // Top face
+        new Vector3(0, -1, 0), // Bottom face
+        new Vector3(-1, 0, 0), // Left face
+        new Vector3(1, 0, 0),  // Right face
     };
 
     public static readonly int[,] CubeTriangles = new int[6, 4]
@@ -45,13 +45,5 @@ public static class Constants
 		{1, 5, 0, 4}, // Bottom face
 		{4, 7, 0, 3}, // Left face
 		{1, 2, 5, 6}, // Right face
-    };
-
-    public static readonly Vector2[] CubeUvs = new Vector2[4]
-    {
-        new Vector2(0, 0),
-        new Vector2(0, 1),
-        new Vector2(1, 0),
-        new Vector2(1, 1),
     };
 }
