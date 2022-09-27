@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// Constants for terrain grid
 /// </summary>
 public static class Constants
