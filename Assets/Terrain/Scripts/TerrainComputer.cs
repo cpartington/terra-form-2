@@ -87,7 +87,7 @@ public class TerrainComputer
                     
                     if (lastType == TerrainType.Sand && type == TerrainType.LowGrass)
                     {
-                        WaterLevel = level;
+                        WaterLevel = level + Constants.TerrainHeightOffset;
                     }
                     lastType = type;
                     
@@ -100,6 +100,13 @@ public class TerrainComputer
         (xOffset, zOffset) = (UnityEngine.Random.Range(-10000f, 10000f), UnityEngine.Random.Range(-10000f, 10000f));
     }
 
+    /// <summary>
+    /// Determines the ground height for a given x,z coordinate.
+    /// </summary>
+    /// <param name="x">x coordinate</param>
+    /// <param name="z">z coordinate</param>
+    /// <returns>Ground height</returns>
+    /// <exception cref="Exception">The calculated noise value should always fit into a percentile. Something is wrong if it does not.</exception>
     public int CalculateGroundHeight(int x, int z)
     {
         float noiseValue = Mathf.Abs(Mathf.Clamp(Mathf.PerlinNoise(x * Constants.GridNoiseScale + xOffset, z * Constants.GridNoiseScale + zOffset), 0, 1) * 2 - 1);
@@ -113,6 +120,11 @@ public class TerrainComputer
         throw new Exception("noiseValue should be less than or equal to the max TerrainLevelPercentiles but is not.");
     }
 
+    /// <summary>
+    /// Converts a y coordinate into its expected terrain type.
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns>Terrain type</returns>
     public byte LevelToTerrainType(int y)
     {
         byte terrainType;

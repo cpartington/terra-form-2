@@ -8,8 +8,8 @@ public static class Constants
     // 16x9 proportions: 270x150, 400x225, 800x450
     public static int GridZLength = 400;
     public static int GridXLength = 225;
-    public static float GridCellWidth = 2f;
-    public static float GridCellHeight = 0.5f;
+    public static float GridCellWidth = 1f;
+    public static float GridCellHeight = 1f;
     public static float GridNoiseScale = 0.01f;
     public const int TerrainHeightOffset = 1;
     public static int TerrainLevels = 50;

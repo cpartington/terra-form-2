@@ -13,16 +13,16 @@ public class Terrain : MonoBehaviour
     private readonly int XLength = Constants.GridXLength;
     private readonly int ZLength = Constants.GridZLength;
     private readonly int YLength = Constants.GridYLength;
-    //private readonly Vector3 OriginPosition = new Vector3(-(Constants.GridXLength / 2), 0, -(Constants.GridZLength / 2));
-    private int WaterLevel;
+    private readonly Vector3 OriginPosition = new Vector3(-(Constants.GridXLength / 2), 0, -(Constants.GridZLength / 2));
 
     private byte[,,] TerrainGrid;
+    private int WaterLevel;
 
     private void Awake()
     {
         Instance = this;
         TerrainMeshData = new();
-        WaterLevel = TerrainComputer.Instance.WaterLevel + Constants.TerrainHeightOffset;
+        WaterLevel = TerrainComputer.Instance.WaterLevel;
 
         Stopwatch stopwatch = new();
         stopwatch.Start();
@@ -34,6 +34,9 @@ public class Terrain : MonoBehaviour
         Debug.Log($"{ZLength} x {XLength} grid loaded in {stopwatch.Elapsed} seconds.");
     }
 
+    /// <summary>
+    /// Initializes the terrain grid.
+    /// </summary>
     private void InitTerrainGrid()
     {
         TerrainGrid = new byte[XLength, YLength, ZLength];
@@ -66,6 +69,9 @@ public class Terrain : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the terrain mesh data for each x,y,z cell.
+    /// </summary>
     private void UpdateTerrainMesh()
     {
         TerrainMeshData.Clear();
@@ -78,7 +84,7 @@ public class Terrain : MonoBehaviour
                 {
                     if (TerrainGrid[x, y, z] != TerrainType.Air)
                     {
-                        AddCellToMesh(new Vector3(x * Constants.GridCellWidth, y * Constants.GridCellHeight, z * Constants.GridCellWidth), TerrainGrid[x, y, z]);
+                        AddCellToMesh(ToWorldPosition(x, y, z), TerrainGrid[x, y, z]);
                     }
                 }
             }
@@ -88,6 +94,11 @@ public class Terrain : MonoBehaviour
         meshFilter.mesh = mesh;
     }
 
+    /// <summary>
+    /// Determines which faces of a single cell should be added to the mesh.
+    /// </summary>
+    /// <param name="pos">Position of the current cell in the world</param>
+    /// <param name="terrainType">Terrain type of the current cell</param>
     private void AddCellToMesh(Vector3 pos, byte terrainType)
     {
         // Iterate over the six faces of the cell
@@ -104,15 +115,15 @@ public class Terrain : MonoBehaviour
     /// <summary>
     /// Determines if a face is an edge face (and therefore should be added to the mesh).
     /// </summary>
-    /// <param name="pos">New position to check against</param>
+    /// <param name="adjacentPosition">Adjacent position to check against</param>
     /// <param name="terrainType">Terrain type of the original position</param>
-    /// <returns></returns>
-    private bool IsEdgeFace(Vector3 pos, byte terrainType)
+    /// <returns>True if the original position is an edge, otherwise False</returns>
+    private bool IsEdgeFace(Vector3 adjacentPosition, byte terrainType)
     {
-        int x = Mathf.FloorToInt(pos.x / Constants.GridCellWidth);
-        int y = Mathf.FloorToInt(pos.y / Constants.GridCellHeight);
-        int z = Mathf.FloorToInt(pos.z / Constants.GridCellWidth);
+        // Get x,y,z of the adjacent position
+        (int x, int y, int z) = FromWorldPosition(adjacentPosition);
 
+        // Cells on the edge of the grid are always edge faces
         if (x < 0 || x >= XLength || y < 0 || y >= YLength || z < 0 || z >= ZLength)
         {
             return true;
@@ -120,20 +131,40 @@ public class Terrain : MonoBehaviour
 
         if (TerrainType.IsGround(terrainType))
         {
+            // Don't draw edges between solid blocks
             return !TerrainType.IsGround(TerrainGrid[x, y, z]);
         }
         else if (terrainType == TerrainType.Water)
         {
+            // Only draw water edges that face air
             return TerrainGrid[x, y, z] == TerrainType.Air;
         }
 
         return false;
     }
 
-    //public Vector3 GetWorldPosition(int x, int y, int z)
-    //{
-    //    var v = new Vector3(x, 0, z) + OriginPosition;
-    //    v.y = y * Constants.GridCellHeight;
-    //    return v;
-    //}
+    /// <summary>
+    /// Converts an x,y,z coordinate from the terrain grid into its associated world position.
+    /// </summary>
+    /// <param name="x">x coordinate</param>
+    /// <param name="y">y coordinate</param>
+    /// <param name="z">z coordinate</param>
+    /// <returns>Vector representing the world position</returns>
+    public Vector3 ToWorldPosition(int x, int y, int z)
+    {
+        return new Vector3(x * Constants.GridCellWidth, y * Constants.GridCellHeight, z * Constants.GridCellWidth);
+    }
+
+    /// <summary>
+    /// Converts a world position into its associated x,y,z coordinate in the terrain grid.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns>x,y,z coordinates</returns>
+    public (int, int, int) FromWorldPosition(Vector3 position)
+    {
+        int x = Mathf.FloorToInt(position.x / Constants.GridCellWidth);
+        int y = Mathf.FloorToInt(position.y / Constants.GridCellHeight);
+        int z = Mathf.FloorToInt(position.z / Constants.GridCellWidth);
+        return (x, y, z);
+    }
 }
