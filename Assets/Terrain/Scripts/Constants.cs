@@ -5,7 +5,7 @@
 /// </summary>
 public static class Constants
 {
-    // 16x9 proportions: 270x150, 800x450
+    // 16x9 proportions: 270x150, 400x225, 800x450
     public static int GridZLength = 400;
     public static int GridXLength = 225;
     public static float GridCellHeight = 0.5f;
@@ -17,22 +17,22 @@ public static class Constants
 
     public static readonly Vector3[] CubeVertices = new Vector3[8]
     {
-        new Vector3(0, 0, 0),
-        new Vector3(1, 0, 0),
-        new Vector3(1, 1, 0),
-        new Vector3(0, 1, 0),
-        new Vector3(0, 0, 1),
-        new Vector3(1, 0, 1),
-        new Vector3(1, 1, 1),
-        new Vector3(0, 1, 1),
+        new Vector3(0, 0, 0), // 0
+        new Vector3(1, 0, 0), // 1
+        new Vector3(1, GridCellHeight, 0), // 2
+        new Vector3(0, GridCellHeight, 0), // 3
+        new Vector3(0, 0, 1), // 4
+        new Vector3(1, 0, 1), // 5
+        new Vector3(1, GridCellHeight, 1), // 6
+        new Vector3(0, GridCellHeight, 1), // 7
     };
 
     public static readonly Vector3[] FaceCheckDirections = new Vector3[6]
     {
         new Vector3(0, 0, -1), // Back face
         new Vector3(0, 0, 1),  // Front face
-        new Vector3(0, 1, 0),  // Top face
-        new Vector3(0, -1, 0), // Bottom face
+        new Vector3(0, GridCellHeight, 0),  // Top face
+        new Vector3(0, -GridCellHeight, 0), // Bottom face
         new Vector3(-1, 0, 0), // Left face
         new Vector3(1, 0, 0),  // Right face
     };

@@ -31,7 +31,7 @@ public class Terrain : MonoBehaviour
         UpdateTerrainMesh();
 
         stopwatch.Stop();
-        Debug.Log($"{XLength} x {ZLength} cells loaded in {stopwatch.Elapsed} seconds."); // TODO fix this value
+        Debug.Log($"{ZLength} x {XLength} grid loaded in {stopwatch.Elapsed} seconds.");
     }
 
     private void InitTerrainGrid()
@@ -78,7 +78,7 @@ public class Terrain : MonoBehaviour
                 {
                     if (TerrainGrid[x, y, z] != TerrainType.Air)
                     {
-                        AddCellToMesh(new Vector3(x, y, z), TerrainGrid[x, y, z]);
+                        AddCellToMesh(new Vector3(x, y * Constants.GridCellHeight, z), TerrainGrid[x, y, z]);
                     }
                 }
             }
@@ -110,7 +110,7 @@ public class Terrain : MonoBehaviour
     private bool IsEdgeFace(Vector3 pos, byte terrainType)
     {
         int x = Mathf.FloorToInt(pos.x);
-        int y = Mathf.FloorToInt(pos.y);
+        int y = Mathf.FloorToInt(pos.y / Constants.GridCellHeight);
         int z = Mathf.FloorToInt(pos.z);
 
         if (x < 0 || x >= XLength || y < 0 || y >= YLength || z < 0 || z >= ZLength)

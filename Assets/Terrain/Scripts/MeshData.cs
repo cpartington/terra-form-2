@@ -51,10 +51,10 @@ public class MeshData
             subMeshCount = TerrainTypeTopology.Count
         };
         mesh.SetVertices(vertices);
-        for (byte terrainType = 0; terrainType < TerrainTypeTopology.Count; terrainType++)
+        for (byte i = 0; i < TerrainTypeTopology.Count; i++)
         {
-            TerrainTypeTopology.TryGetValue(terrainType, out List<int> triangles);
-            mesh.SetIndices(triangles, MeshTopology.Triangles, terrainType); 
+            TerrainTypeTopology.TryGetValue(i, out List<int> triangles);
+            mesh.SetIndices(triangles, MeshTopology.Triangles, i); 
         }
 
         mesh.RecalculateNormals();
