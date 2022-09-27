@@ -78,7 +78,7 @@ public class Terrain : MonoBehaviour
                 {
                     if (TerrainGrid[x, y, z] != TerrainType.Air)
                     {
-                        AddCellToMesh(new Vector3(x, y * Constants.GridCellHeight, z), TerrainGrid[x, y, z]);
+                        AddCellToMesh(new Vector3(x * Constants.GridCellWidth, y * Constants.GridCellHeight, z * Constants.GridCellWidth), TerrainGrid[x, y, z]);
                     }
                 }
             }
@@ -109,9 +109,9 @@ public class Terrain : MonoBehaviour
     /// <returns></returns>
     private bool IsEdgeFace(Vector3 pos, byte terrainType)
     {
-        int x = Mathf.FloorToInt(pos.x);
+        int x = Mathf.FloorToInt(pos.x / Constants.GridCellWidth);
         int y = Mathf.FloorToInt(pos.y / Constants.GridCellHeight);
-        int z = Mathf.FloorToInt(pos.z);
+        int z = Mathf.FloorToInt(pos.z / Constants.GridCellWidth);
 
         if (x < 0 || x >= XLength || y < 0 || y >= YLength || z < 0 || z >= ZLength)
         {
