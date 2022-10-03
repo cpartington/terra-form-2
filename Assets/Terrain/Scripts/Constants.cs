@@ -5,16 +5,49 @@
 /// </summary>
 public static class Constants
 {
+    /// Grid Properties
+    /// Values coordinate with the x,y,z TerrainGrid values.
+
     // 16x9 proportions: 270x150, 400x225, 800x450
+    /// <summary>
+    /// Grid size in Z dimension.
+    /// </summary>
     public static int GridZLength = 400;
+    /// <summary>
+    /// Grid size in X dimension.
+    /// </summary>
     public static int GridXLength = 225;
-    public static float GridCellWidth = 1f;
-    public static float GridCellHeight = 0.5f;
-    public static float GridNoiseScale = 0.01f;
+    /// <summary>
+    /// Number of extra cells to include at the bottom of the grid.
+    /// </summary>
     public const int TerrainHeightOffset = 1;
+    /// <summary>
+    /// Maximum y value (excluding the TerrainHeightOffset).
+    /// </summary>
     public static int TerrainLevels = 100;
+    /// <summary>
+    /// Grid size in the Y dimension.
+    /// Calculated as TerrainLevels + TerrainHeightOffset.
+    /// </summary>
     public static int GridYLength = TerrainLevels + TerrainHeightOffset;
-    public static int[] TerrainTypeWeights = { 1, 1, 5, 8, 7 };
+
+    /// World Properties
+    /// Values represent positions in the game world.
+
+    /// <summary>
+    /// Single cell size in x and z dimensions.
+    /// </summary>
+    public static float GridCellWidth = 1f;
+    /// <summary>
+    /// Single cell size in y dimension.
+    /// </summary>
+    public static float GridCellHeight = 0.5f;
+    /// <summary>
+    /// How much the water line sits below the grass
+    /// </summary>
+    public const float WaterPosOffset = -0.1f;
+
+    /// Mesh Properties
 
     public static readonly Vector3[] CubeVertices = new Vector3[8]
     {
@@ -26,6 +59,18 @@ public static class Constants
         new Vector3(GridCellWidth, 0, GridCellWidth),              // 5
         new Vector3(GridCellWidth, GridCellHeight, GridCellWidth), // 6
         new Vector3(0, GridCellHeight, GridCellWidth),             // 7
+    };
+
+    public static readonly Vector3[] CubeVerticesWater = new Vector3[8]
+    {
+        new Vector3(0, 0, 0),                                                       // 0
+        new Vector3(GridCellWidth, 0, 0),                                           // 1
+        new Vector3(GridCellWidth, GridCellHeight + WaterPosOffset, 0),             // 2
+        new Vector3(0, GridCellHeight + WaterPosOffset, 0),                         // 3
+        new Vector3(0, 0, GridCellWidth),                                           // 4
+        new Vector3(GridCellWidth, 0, GridCellWidth),                               // 5
+        new Vector3(GridCellWidth, GridCellHeight + WaterPosOffset, GridCellWidth), // 6
+        new Vector3(0, GridCellHeight + WaterPosOffset, GridCellWidth),             // 7
     };
 
     public static readonly Vector3[] FaceCheckDirections = new Vector3[6]
@@ -47,6 +92,4 @@ public static class Constants
 		{4, 7, 0, 3}, // Left face
 		{1, 2, 5, 6}, // Right face
     };
-
-    public static readonly Vector3 WaterHeightOffset = new Vector3(0, -0.25f, 0);
 }

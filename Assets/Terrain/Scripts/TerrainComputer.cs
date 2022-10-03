@@ -25,7 +25,8 @@ public class TerrainComputer
     private Dictionary<int, byte> LevelToTerrainTypeDict;
 
     private readonly int TerrainLevels = Constants.TerrainLevels;
-    private readonly int[] TerrainTypeWeights = Constants.TerrainTypeWeights;
+    public static float GridNoiseScale = 0.01f;
+    public static int[] TerrainTypeWeights = { 1, 1, 5, 8, 7 };
 
     private float xOffset;
     private float zOffset;
@@ -109,7 +110,7 @@ public class TerrainComputer
     /// <exception cref="Exception">The calculated noise value should always fit into a percentile. Something is wrong if it does not.</exception>
     public int CalculateGroundHeight(int x, int z)
     {
-        float noiseValue = Mathf.Abs(Mathf.Clamp(Mathf.PerlinNoise(x * Constants.GridNoiseScale + xOffset, z * Constants.GridNoiseScale + zOffset), 0, 1) * 2 - 1);
+        float noiseValue = Mathf.Abs(Mathf.Clamp(Mathf.PerlinNoise(x * GridNoiseScale + xOffset, z * GridNoiseScale + zOffset), 0, 1) * 2 - 1);
         for (int i = 0; i < TerrainLevelPercentiles.Length; i++)
         {
             if (noiseValue <= TerrainLevelPercentiles[i])

@@ -26,10 +26,21 @@ public class MeshData
 
     public void Add(Vector3 pos, int face, byte terrainType)
     {
-        vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, 0]]);
-        vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, 1]]);
-        vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, 2]]);
-        vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, 3]]);
+        // Vertices
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (terrainType == TerrainType.Water)
+            {
+                vertices.Add(pos + Constants.CubeVerticesWater[Constants.CubeTriangles[face, i]]);
+            }
+            else
+            {
+                vertices.Add(pos + Constants.CubeVertices[Constants.CubeTriangles[face, i]]);
+            }
+        }
+
+        // Triangles
 
         List<int> triangles;
         TerrainTypeTopology.TryGetValue(terrainType, out triangles);
@@ -54,7 +65,7 @@ public class MeshData
         for (byte i = 0; i < TerrainTypeTopology.Count; i++)
         {
             TerrainTypeTopology.TryGetValue(i, out List<int> triangles);
-            mesh.SetIndices(triangles, MeshTopology.Triangles, i); 
+            mesh.SetIndices(triangles, MeshTopology.Triangles, i);
         }
 
         mesh.RecalculateNormals();

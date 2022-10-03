@@ -7,18 +7,18 @@ public class TerrainController : MonoBehaviour
     public int GridXLength = Constants.GridXLength;
     public int GridZLength = Constants.GridZLength;
     public float GridCellHeight = Constants.GridCellHeight;
-    public float GridNoiseScale = Constants.GridNoiseScale;
+    public float GridNoiseScale = TerrainComputer.GridNoiseScale;
     public int TerrainLevels = Constants.TerrainLevels;
-    public int[] TerrainTypeWeights = Constants.TerrainTypeWeights;
+    public int[] TerrainTypeWeights = TerrainComputer.TerrainTypeWeights;
 
     private void Awake()
     {
         Constants.GridXLength = GridXLength;
         Constants.GridZLength = GridZLength;
         Constants.GridCellHeight = GridCellHeight;
-        Constants.GridNoiseScale = GridNoiseScale;
+        TerrainComputer.GridNoiseScale = GridNoiseScale;
         Constants.TerrainLevels = TerrainLevels;
-        Constants.TerrainTypeWeights = TerrainTypeWeights;
+        TerrainComputer.TerrainTypeWeights = TerrainTypeWeights;
 
         if (Seed == -1)
         {
