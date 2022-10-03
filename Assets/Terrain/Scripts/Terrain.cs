@@ -14,7 +14,7 @@ public class Terrain : MonoBehaviour
     private readonly int XLength = Constants.GridXLength;
     private readonly int ZLength = Constants.GridZLength;
     private readonly int YLength = Constants.GridYLength;
-    private readonly Vector3 OriginPosition = new Vector3(-(Constants.GridXLength / 2), 0, -(Constants.GridZLength / 2));
+    private readonly Vector3 OriginPosition = new Vector3(-(Constants.GridXLength / 2f), 0, -(Constants.GridZLength / 2f));
 
     private byte[,,] TerrainGrid;
     private int WaterLevel;
@@ -154,7 +154,7 @@ public class Terrain : MonoBehaviour
     /// <returns>Vector representing the world position</returns>
     public Vector3 ToWorldPosition(int x, int y, int z)
     {
-        return new Vector3(x * Constants.GridCellWidth, y * Constants.GridCellHeight, z * Constants.GridCellWidth);
+        return new Vector3(x * Constants.GridCellWidth, y * Constants.GridCellHeight, z * Constants.GridCellWidth) + OriginPosition;
     }
 
     /// <summary>
@@ -164,9 +164,9 @@ public class Terrain : MonoBehaviour
     /// <returns>x,y,z coordinates</returns>
     public (int, int, int) FromWorldPosition(Vector3 position)
     {
-        int x = Mathf.FloorToInt(position.x / Constants.GridCellWidth);
-        int y = Mathf.FloorToInt(position.y / Constants.GridCellHeight);
-        int z = Mathf.FloorToInt(position.z / Constants.GridCellWidth);
+        int x = Mathf.FloorToInt(position.x / Constants.GridCellWidth - OriginPosition.x);
+        int y = Mathf.FloorToInt(position.y / Constants.GridCellHeight - OriginPosition.y);
+        int z = Mathf.FloorToInt(position.z / Constants.GridCellWidth - OriginPosition.z);
         return (x, y, z);
     }
 }
