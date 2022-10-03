@@ -9,12 +9,12 @@ public static class Constants
     public static int GridZLength = 400;
     public static int GridXLength = 225;
     public static float GridCellWidth = 1f;
-    public static float GridCellHeight = 1f;
+    public static float GridCellHeight = 0.5f;
     public static float GridNoiseScale = 0.01f;
     public const int TerrainHeightOffset = 1;
-    public static int TerrainLevels = 50;
+    public static int TerrainLevels = 100;
     public static int GridYLength = TerrainLevels + TerrainHeightOffset;
-    public static int[] TerrainTypeWeights = { 1, 1, 3, 6, 5 };
+    public static int[] TerrainTypeWeights = { 1, 1, 5, 8, 7 };
 
     public static readonly Vector3[] CubeVertices = new Vector3[8]
     {
@@ -47,4 +47,6 @@ public static class Constants
 		{4, 7, 0, 3}, // Left face
 		{1, 2, 5, 6}, // Right face
     };
+
+    public static readonly Vector3 WaterHeightOffset = new Vector3(0, -0.25f, 0);
 }

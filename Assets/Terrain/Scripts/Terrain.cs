@@ -8,6 +8,7 @@ public class Terrain : MonoBehaviour
 
     public MeshRenderer meshRenderer;
     public MeshFilter meshFilter;
+    public MeshCollider meshCollider;
     public MeshData TerrainMeshData;
 
     private readonly int XLength = Constants.GridXLength;
@@ -92,6 +93,7 @@ public class Terrain : MonoBehaviour
 
         Mesh mesh = TerrainMeshData.CreateMesh();
         meshFilter.mesh = mesh;
+        meshCollider.sharedMesh = mesh;
     }
 
     /// <summary>
