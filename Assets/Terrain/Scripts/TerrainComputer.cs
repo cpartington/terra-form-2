@@ -9,10 +9,7 @@ public class TerrainComputer
     public static TerrainComputer Instance { 
         get
         {
-            if (_Instance == null)
-            {
-                _Instance = new TerrainComputer();
-            }
+            _Instance ??= new TerrainComputer();
             return _Instance;
         }
     }
@@ -33,6 +30,7 @@ public class TerrainComputer
 
     private TerrainComputer()
     {
+        // Get scaled indices
         float scale = (float)(TerrainLevels - 1) / (TerrainTypeWeights.Length - 1);
         float[] scaledIndices = new float[TerrainTypeWeights.Length];
         for (int i = 0; i < TerrainTypeWeights.Length; i++)
@@ -40,6 +38,7 @@ public class TerrainComputer
             scaledIndices[i] = i * scale;
         }
 
+        // Calculate weight for each terrain level
         float[] terrainLevelWeights = new float[TerrainLevels];
         terrainLevelWeights[0] = TerrainTypeWeights[0];
         for (int i = 1; i < TerrainLevels; i++)

@@ -8,7 +8,6 @@ public static class Constants
     /// Grid Properties
     /// Values coordinate with the x,y,z TerrainGrid values.
 
-    // 16x9 proportions: 270x150, 400x225, 800x450
     /// <summary>
     /// Grid size in Z dimension.
     /// </summary>
@@ -24,12 +23,20 @@ public static class Constants
     /// <summary>
     /// Maximum y value (excluding the TerrainHeightOffset).
     /// </summary>
-    public static int TerrainLevels = 100;
+    public static int TerrainLevels = 25;
     /// <summary>
     /// Grid size in the Y dimension.
     /// Calculated as TerrainLevels + TerrainHeightOffset.
     /// </summary>
     public static int GridYLength = TerrainLevels + TerrainHeightOffset;
+    /// <summary>
+    /// Chunk size in the X/Z dimensions.
+    /// </summary>
+    public const int ChunkSize = 16;
+    /// <summary>
+    /// Number of chunks to create during initial world generation.
+    /// </summary>
+    public const int WorldSizeInChunks = 5;
 
     /// World Properties
     /// Values represent positions in the game world.
