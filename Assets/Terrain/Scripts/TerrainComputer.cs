@@ -16,22 +16,18 @@ public class TerrainComputer
     public static TerrainComputer _Instance;
 
     public float[] TerrainTypePercentiles { get; private set; }
-    public float[] TerrainLevelPercentiles { get; private set; }
     public int WaterLevel { get; private set; }
 
     private Dictionary<int, byte> LevelToTerrainTypeDict;
+    public static int[] TerrainTypeWeights = { 1, 1, 6, 9, 8 };
 
-    private readonly int TerrainLevels = Constants.TerrainLevels;
-    public static float GridNoiseScale = 0.01f;
-    public static int[] TerrainTypeWeights = { 1, 1, 5, 8, 7 };
-
-    private float xOffset;
-    private float zOffset;
+    private float[] xOffsets;
+    private float[] zOffsets;
 
     private TerrainComputer()
     {
         // Get scaled indices
-        float scale = (float)(TerrainLevels - 1) / (TerrainTypeWeights.Length - 1);
+        float scale = (float)(Constants.TerrainLevels - 1) / (TerrainTypeWeights.Length - 1);
         float[] scaledIndices = new float[TerrainTypeWeights.Length];
         for (int i = 0; i < TerrainTypeWeights.Length; i++)
         {
@@ -39,9 +35,9 @@ public class TerrainComputer
         }
 
         // Calculate weight for each terrain level
-        float[] terrainLevelWeights = new float[TerrainLevels];
+        float[] terrainLevelWeights = new float[Constants.TerrainLevels];
         terrainLevelWeights[0] = TerrainTypeWeights[0];
-        for (int i = 1; i < TerrainLevels; i++)
+        for (int i = 1; i < Constants.TerrainLevels; i++)
         {
             for (int j = 0; j < scaledIndices.Length; j++)
             {
@@ -63,22 +59,16 @@ public class TerrainComputer
         }
 
         // Calculate percentiles
-        float terrainlevelWeightTotal = terrainLevelWeights.Sum();
-        TerrainLevelPercentiles = terrainLevelWeights.Select((weight, index) =>
-        { return (weight + terrainLevelWeights.Take(index).Sum()) / terrainlevelWeightTotal; }).ToArray();
-
         float terrainTypeWeightTotal = TerrainTypeWeights.Sum();
         TerrainTypePercentiles = TerrainTypeWeights.Select((weight, index) =>
         { return (weight + TerrainTypeWeights.Take(index).Sum()) / terrainTypeWeightTotal; }).ToArray();
 
         // Create mapping from y level to terrain type
         LevelToTerrainTypeDict = new Dictionary<int, byte>();
-        // Bottom layer is always dark sand
-        LevelToTerrainTypeDict.Add(0, TerrainType.DarkSand);
         byte lastType = TerrainType.DarkSand;
-        for (int level = 1; level <= TerrainLevels; level++)
+        for (int level = 0; level < Constants.TerrainLevels; level++)
         {
-            float percentile = level / ((float)TerrainLevels - 1);
+            float percentile = level / (float)Constants.TerrainLevels;
             for (byte type = 0; type < TerrainTypePercentiles.Length; type++)
             {
                 if (percentile <= TerrainTypePercentiles[type])
@@ -87,7 +77,7 @@ public class TerrainComputer
                     
                     if (lastType == TerrainType.Sand && type == TerrainType.LowGrass)
                     {
-                        WaterLevel = level + Constants.TerrainHeightOffset;
+                        WaterLevel = level;
                     }
                     lastType = type;
                     
@@ -97,7 +87,12 @@ public class TerrainComputer
         }
 
         // Calculate noise value offsets
-        (xOffset, zOffset) = (UnityEngine.Random.Range(-10000f, 10000f), UnityEngine.Random.Range(-10000f, 10000f));
+        this.xOffsets = new float[Constants.Octaves];
+        this.zOffsets = new float[Constants.Octaves];
+        for (int i = 0; i < Constants.Octaves; i++)
+        {
+            (xOffsets[i], zOffsets[i]) = (UnityEngine.Random.Range(-10000f, 10000f), UnityEngine.Random.Range(-10000f, 10000f));
+        }
     }
 
     /// <summary>
@@ -109,15 +104,22 @@ public class TerrainComputer
     /// <exception cref="Exception">The calculated noise value should always fit into a percentile. Something is wrong if it does not.</exception>
     public int CalculateGroundHeight(int x, int z)
     {
-        float noiseValue = Mathf.Abs(Mathf.Clamp(Mathf.PerlinNoise(x * GridNoiseScale + xOffset, z * GridNoiseScale + zOffset), 0, 1) * 2 - 1);
-        for (int i = 0; i < TerrainLevelPercentiles.Length; i++)
+        float noiseValue = Mathf.Abs(GetNoiseValue(x, z));
+        return Mathf.FloorToInt(noiseValue * Constants.TerrainLevels);
+    }
+
+    private float GetNoiseValue(int x, int z)
+    {
+        float totalNoiseValue = 0f;
+
+        for (int i = 0; i < Constants.Octaves; i++)
         {
-            if (noiseValue <= TerrainLevelPercentiles[i])
-            {
-                return i + Constants.TerrainHeightOffset;
-            }
+            float frequency = Constants.Scale * Mathf.Pow(Constants.Lacunarity, i);
+            float perlinValue = Mathf.PerlinNoise(x * frequency + xOffsets[i], z * frequency + zOffsets[i]) * 2 - 1;
+            totalNoiseValue += perlinValue * Mathf.Pow(Constants.Persistence, i);
         }
-        throw new Exception("noiseValue should be less than or equal to the max TerrainLevelPercentiles but is not.");
+
+        return Mathf.Clamp(totalNoiseValue, -1, 1);
     }
 
     /// <summary>

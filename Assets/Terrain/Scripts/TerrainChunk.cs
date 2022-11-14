@@ -162,7 +162,7 @@ public class TerrainChunk
     }
 
     /// <summary>
-    /// Converts an x,y,z coordinate from the local chunk grid into its associated world position.
+    /// Converts an x,y,z coordinate from the local chunk grid into its local world position.
     /// </summary>
     /// <param name="x">x coordinate</param>
     /// <param name="y">y coordinate</param>
@@ -178,7 +178,7 @@ public class TerrainChunk
     }
 
     /// <summary>
-    /// Converts a world position into its associated x,y,z coordinate in the local chunk grid.
+    /// Converts a local world position into its associated x,y,z coordinate in the local chunk grid.
     /// </summary>
     /// <param name="position"></param>
     /// <returns>x,y,z coordinates</returns>

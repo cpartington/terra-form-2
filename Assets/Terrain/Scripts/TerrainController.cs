@@ -7,7 +7,7 @@ public class TerrainController : MonoBehaviour
     public int GridXLength = Constants.GridXLength;
     public int GridZLength = Constants.GridZLength;
     public float GridCellHeight = Constants.GridCellHeight;
-    public float GridNoiseScale = TerrainComputer.GridNoiseScale;
+    public float TerrainNoiseScale = Constants.Scale;
     public int TerrainLevels = Constants.TerrainLevels;
     public int[] TerrainTypeWeights = TerrainComputer.TerrainTypeWeights;
 
@@ -16,7 +16,7 @@ public class TerrainController : MonoBehaviour
         Constants.GridXLength = GridXLength;
         Constants.GridZLength = GridZLength;
         Constants.GridCellHeight = GridCellHeight;
-        TerrainComputer.GridNoiseScale = GridNoiseScale;
+        Constants.Scale = TerrainNoiseScale;
         Constants.TerrainLevels = TerrainLevels;
         TerrainComputer.TerrainTypeWeights = TerrainTypeWeights;
 

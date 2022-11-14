@@ -39,7 +39,7 @@ public class Terrain : MonoBehaviour
             for (int z = ChunkMapBaseMinValue; z < ChunkMapBaseMaxValue; z++)
             {
                 var coordinate = new ChunkCoordinate(x, z);
-                ChunkMap.Add(coordinate, new TerrainChunk(coordinate));
+                ChunkMap[coordinate] = new TerrainChunk(coordinate);
             }
         }
     }
@@ -57,7 +57,7 @@ public class Terrain : MonoBehaviour
                 if (chunk == null)
                 {
                     // TODO need to update adjacent mesh to remove redundant edges
-                    ChunkMap.Add(coordinate, new TerrainChunk(coordinate));
+                    ChunkMap[coordinate] = new TerrainChunk(coordinate);
                 }
             }
         }
@@ -69,5 +69,11 @@ public class Terrain : MonoBehaviour
             Mathf.FloorToInt(worldPosition.x / Constants.ChunkSize),
             Mathf.FloorToInt(worldPosition.z / Constants.ChunkSize)
         );
+    }
+
+    public bool PositionIsInWorld(Vector3 position)
+    {
+        var coordinate = WorldPositionToChunkCoordinate(position);
+        return ChunkMap.ContainsKey(coordinate);
     }
 }

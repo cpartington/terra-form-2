@@ -138,7 +138,7 @@ namespace StarterAssets
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
 
-            stepRayUpper.transform.position = new Vector3(stepRayUpper.transform.position.x, stepRayLower.transform.position.y + stepHeight, stepRayUpper.transform.position.z);
+            stepRayUpper.transform.position = new Vector3(stepRayUpper.transform.position.x, stepRayLower.transform.position.y + stepHeight + stepSmooth, stepRayUpper.transform.position.z);
         }
 
         private void Start()
@@ -411,7 +411,7 @@ namespace StarterAssets
                 {
                     //_controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
                              //new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-                    _controller.Move(new Vector3(0, 1, 0) * (4 * Time.deltaTime));
+                    _controller.Move(new Vector3(0, 1, 0) * (5 * Time.deltaTime));
                 }
             }
         }

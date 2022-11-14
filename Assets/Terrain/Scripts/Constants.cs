@@ -5,6 +5,25 @@
 /// </summary>
 public static class Constants
 {
+    /// Perlin Noise Properties
+
+    /// <summary>
+    /// Scale
+    /// </summary>
+    public static float Scale = 0.005f;
+    /// <summary>
+    /// Layers; must be at least one
+    /// </summary>
+    public const int Octaves = 5;
+    /// <summary>
+    /// Frequency; should be greater than one.
+    /// </summary>
+    public const float Lacunarity = 5f;
+    /// <summary>
+    /// Amplitude; should be less than one.
+    /// </summary>
+    public const float Persistence = 0.2f;
+
     /// Grid Properties
     /// Values coordinate with the x,y,z TerrainGrid values.
 
@@ -17,18 +36,14 @@ public static class Constants
     /// </summary>
     public static int GridXLength = 225;
     /// <summary>
-    /// Number of extra cells to include at the bottom of the grid.
-    /// </summary>
-    public const int TerrainHeightOffset = 1;
-    /// <summary>
     /// Maximum y value (excluding the TerrainHeightOffset).
     /// </summary>
-    public static int TerrainLevels = 25;
+    public static int TerrainLevels = 50;
     /// <summary>
     /// Grid size in the Y dimension.
     /// Calculated as TerrainLevels + TerrainHeightOffset.
     /// </summary>
-    public static int GridYLength = TerrainLevels + TerrainHeightOffset;
+    public static int GridYLength = TerrainLevels;
     /// <summary>
     /// Chunk size in the X/Z dimensions.
     /// </summary>
@@ -36,7 +51,7 @@ public static class Constants
     /// <summary>
     /// Number of chunks to create during initial world generation.
     /// </summary>
-    public const int WorldSizeInChunks = 5;
+    public const int WorldSizeInChunks = 20;
 
     /// World Properties
     /// Values represent positions in the game world.
